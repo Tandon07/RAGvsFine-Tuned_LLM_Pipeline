@@ -1,28 +1,29 @@
+
 ---
 
 # 📊 Financial Q\&A Assistant — Globex Innovations
 
-## 🚀 Overview
+## 🚀 Project Overview
 
-This project provides **Question Answering (Q\&A)** on financial data (2023–2024) for *Globex Innovations*.
-It implements and compares two approaches:
+This project was built to answer **financial questions** on *Globex Innovations’ 2023–2024 data*.
+
+We wanted to explore two different approaches for Q\&A systems:
 
 1. **RAG (Retrieval-Augmented Generation)**
 
-   * Uses FAISS for vector similarity search
-   * Retrieves the most relevant Q\&A pairs
-   * Passes context to **Groq LLM (`llama-3.1-8b-instant`)** for natural answer generation
+   * Uses **FAISS** to search through stored Q\&A pairs
+   * Passes relevant chunks into **Groq LLM (`llama-3.1-8b-instant`)** for response generation
 
 2. **Fine-Tuned DistilBERT QA**
 
-   * A lightweight QA model fine-tuned on company-specific Q\&A pairs
-   * Falls back to retriever mode if fine-tuned model is missing
+   * A lighter model fine-tuned directly on company-specific Q\&A pairs
+   * Works offline, and if the fine-tuned model isn’t available, it falls back to retrieval mode
 
-👉 Includes a **Streamlit dashboard** for interactive queries.
+On top of this, we also built a **Streamlit dashboard** so everything can be tested interactively (not just via CLI).
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ How It Works (Architecture)
 
 ```mermaid
 flowchart TD
@@ -41,11 +42,11 @@ flowchart TD
 
 ```
 project/
-│── app.py                  # CLI interface
-│── config.py               # Configurations (paths, API keys, model)
-│── requirements.txt        # Dependencies
-│── README.md               # Project documentation
+│── app.py                  # CLI tool for Q&A
 │── streamlit_app.py        # Streamlit dashboard
+│── config.py               # Paths, API keys, model configs
+│── requirements.txt        # Dependencies
+│── README.md               # This file :)
 │
 ├── data/
 │   ├── raw/
@@ -54,12 +55,12 @@ project/
 │       └── qa_pairs.json
 │
 ├── rag_system/
-│   ├── data_processor.py   # Converts docx → Q&A JSON
+│   ├── data_processor.py   # Convert docx → Q&A JSON
 │   ├── retriever_faiss.py  # FAISS-based retriever
-│   └── generator.py        # Groq-powered answer generator
+│   └── generator.py        # Groq LLM answer generation
 │
 ├── fine_tuned_system/
-│   └── model.py            # Fine-tuned DistilBERT QA model (or fallback retriever)
+│   └── model.py            # Fine-tuned DistilBERT (or retriever fallback)
 │
 └── fine_tuning/
     └── fine_tune_bert.ipynb  # Notebook for fine-tuning DistilBERT
@@ -67,9 +68,9 @@ project/
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Setup
 
-### 1. Clone repo & create environment
+### 1. Clone & create environment
 
 ```bash
 git clone <repo_url>
@@ -79,7 +80,7 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure Groq API
+### 2. Add Groq API key
 
 ```bash
 # Windows (PowerShell)
@@ -89,15 +90,15 @@ setx GROQ_API_KEY "your_api_key_here"
 export GROQ_API_KEY="your_api_key_here"
 ```
 
-### 3. Prepare Data
+### 3. Prepare data
 
-Place your dataset:
+Put your financial data in:
 
 ```
 data/raw/Company_data.docx
 ```
 
-Process into Q\&A JSON:
+Then preprocess it:
 
 ```bash
 python -m rag_system.data_processor
@@ -105,81 +106,89 @@ python -m rag_system.data_processor
 
 ---
 
-## ▶️ Running the Project
+## ▶️ Run the Project
 
-### 1. Run CLI
+### CLI mode
 
 ```bash
 python app.py
 ```
 
-### 2. Run Streamlit Dashboard
+### Streamlit dashboard
 
 ```bash
 streamlit run streamlit_app.py
 ```
 
-You’ll get an interactive UI:
+In the UI, you can:
 
-* Enter your **question**
-* Choose **RAG** (FAISS + Groq LLM) or **Fine-Tuned QA**
-* See **Answer + Confidence + Method + Response Time**
-* Expand to view retrieved context
+* Type your question
+* Select whether to use **RAG** (FAISS + Groq) or **Fine-Tuned DistilBERT**
+* See the **answer, confidence score, method used, and response time**
+* Expand the retrieved context for debugging
 
 ---
 
 ## 🧑‍🏫 Fine-Tuning DistilBERT
 
-To fine-tune DistilBERT on your dataset:
+To fine-tune DistilBERT on your own dataset:
 
-1. Open notebook:
+1. Open the notebook:
 
    ```
    fine_tuning/fine_tune_bert.ipynb
    ```
-2. Run training (uses `qa_pairs.json`)
-3. Save model to:
+2. Train on `qa_pairs.json`
+3. Save the trained model to:
 
    ```
    fine_tuned_system/distilbert-qa-lora
    ```
 
-The system will auto-load this model when available.
-
-If the model is missing, it falls back to FAISS retriever answers.
+The system will automatically load it. If not found, it falls back to FAISS retrieval.
 
 ---
 
-## 🔍 Comparison: RAG vs Fine-Tuned
+## 🔍 RAG vs Fine-Tuned — What We Learned
 
-| Feature         | RAG (FAISS + Groq)          | Fine-Tuned DistilBERT         |
-| --------------- | --------------------------- | ----------------------------- |
-| Data Dependency | Uses stored Q\&A context    | Learns company-specific QA    |
-| Model Size      | Llama-3.1-8B (via Groq API) | DistilBERT (\~66M params)     |
-| Response Style  | Conversational, generative  | Extractive, precise           |
-| External API    | ✅ Requires Groq API         | ❌ Runs fully offline          |
-| Training Needed | ❌ No                        | ✅ Yes (fine-tuning)           |
-| Speed           | Medium (API call)           | Fast (local inference)        |
-| Adaptability    | General reasoning           | Best for domain-specific data |
+| Feature         | RAG (FAISS + Groq)         | Fine-Tuned DistilBERT         |
+| --------------- | -------------------------- | ----------------------------- |
+| Data Dependency | Uses stored Q\&A chunks    | Learns directly from QA pairs |
+| Model Size      | Llama-3.1-8B (Groq)        | DistilBERT (\~66M params)     |
+| Response Style  | Conversational, generative | Extractive, precise           |
+| External API    | ✅ Needs Groq API           | ❌ Works fully offline         |
+| Training Needed | ❌ No training required     | ✅ Needs fine-tuning           |
+| Speed           | Medium (API call latency)  | Fast (local inference)        |
+| Best Use Case   | General reasoning          | Domain-specific answers       |
 
 ---
 
 ## 🛠️ Tech Stack
 
 * **LLMs:** Groq LLaMA-3.1, DistilBERT
-* **Vector DB:** FAISS (dense embeddings with Sentence-Transformers)
+* **Vector DB:** FAISS (Sentence-Transformers embeddings)
 * **Frameworks:** HuggingFace, LangChain, Streamlit
 * **Fine-Tuning:** HuggingFace Transformers + PEFT (LoRA)
-* **Utilities:** python-docx, scikit-learn, dotenv
+* **Other tools:** python-docx, scikit-learn, dotenv
 
 ---
 
-## 🔮 Future Enhancements
+## 🔮 Next Steps / Improvements
 
-* [ ] Add **evaluation metrics** (Exact Match, F1)
-* [ ] Support for **multiple company datasets**
-* [ ] Hybrid retriever (**BM25 + FAISS**)
-* [ ] Deploy as **FastAPI microservice**
-* [ ] Dockerize for production
+* Add evaluation metrics (Exact Match, F1, BLEU)
+* Support for multiple companies/datasets
+* Try hybrid retrievers (BM25 + FAISS)
+* Deploy via **FastAPI** and package with Docker
+* Improve Streamlit UI with charts & retrieval insights
+
+---
+
+## 👥 About Us
+
+**Team led by Neeraj Dixit**
+
+* Data Analyst → Aspiring Data Scientist
+* 5+ years experience in Data Science & ML
+* Passionate about **NLP, RAG, GenAI, and MLOps**
 
 ---
