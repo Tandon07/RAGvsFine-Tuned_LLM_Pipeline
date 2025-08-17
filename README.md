@@ -1,16 +1,3 @@
-* Clear **overview** of the project
-* **Architecture diagram** (text + optional Mermaid for GitHub rendering)
-* **Project structure explanation**
-* **Setup instructions** (installation, API key, environment)
-* **How to run** CLI and Streamlit dashboard
-* **Fine-tuning instructions**
-* **Comparison between RAG and Fine-tuned approach**
-* **Tech stack & dependencies**
-* **Future enhancements**
-* **Author & credits**
-
-Here’s the full README draft:
-
 ---
 
 # 📊 Financial Q\&A Assistant — Globex Innovations
