@@ -1,4 +1,3 @@
-# rag_system/generator.py
 from langchain_groq import ChatGroq
 from langchain.schema import HumanMessage
 from rag_system.retriever_faiss import FAISSRetriever

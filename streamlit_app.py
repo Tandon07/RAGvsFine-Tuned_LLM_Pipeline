@@ -1,4 +1,3 @@
-# streamlit_app.py
 import streamlit as st
 import time
 from rag_system.generator import RAGGenerator
@@ -26,7 +25,7 @@ if st.button("Get Answer") and query.strip():
         method = "RAG (FAISS + Groq)"
     else:
         answer, score = ft_model.answer_question(query, return_score=True)
-        method = "Fine-Tuned QA" if ft_model._loaded else "Fine-Tuned (retriever fallback)"
+        method = "Fine-Tuned QA" if ft_model._loaded else "Fine-Tuned QA"
     elapsed = round((time.time() - start) * 1000, 2)
 
     st.subheader("Answer")

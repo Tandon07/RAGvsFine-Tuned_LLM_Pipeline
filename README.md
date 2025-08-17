@@ -183,12 +183,11 @@ The system will automatically load it. If not found, it falls back to FAISS retr
 
 ---
 
-## 👥 About Us
+## 👥 About Us  
 
-**Team led by Neeraj Dixit**
+**Conversation AI — Group 77**  
 
-* Data Analyst → Aspiring Data Scientist
-* 5+ years experience in Data Science & ML
-* Passionate about **NLP, RAG, GenAI, and MLOps**
+We are a team of **M.Tech students at BITS Pilani**, currently in our **3rd semester** specializing in **Artificial Intelligence and Machine Learning**.  
+This project is part of our coursework, where we explore practical applications of **NLP, LLMs, and fine-tuning techniques** in real-world financial Q&A systems.  
 
 ---

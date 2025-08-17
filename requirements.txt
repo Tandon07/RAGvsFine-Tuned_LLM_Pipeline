@@ -11,3 +11,4 @@ peft
 langchain
 langchain-groq
 python-dotenv
+pandas

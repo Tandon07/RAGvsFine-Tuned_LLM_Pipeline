@@ -1,4 +1,3 @@
-# rag_system/retriever_faiss.py
 import json
 import os
 import faiss
