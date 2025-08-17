@@ -1,0 +1,13 @@
+streamlit
+torch
+transformers
+datasets
+faiss-cpu
+scikit-learn
+python-docx
+sentence-transformers
+accelerate
+peft
+langchain
+langchain-groq
+python-dotenv
