@@ -4,10 +4,12 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from config import PROCESSED_DATA_PATH, EMBEDDING_MODEL, FAISS_INDEX_PATH
+import streamlit as st
+
 
 class FAISSRetriever:
     def __init__(self, processed_path=PROCESSED_DATA_PATH, index_path=FAISS_INDEX_PATH):
-        self.embedder = SentenceTransformer(EMBEDDING_MODEL)
+        self.embedder = SentenceTransformer(EMBEDDING_MODEL, use_auth_token=st.secrets["HF_TOKEN"])
         self.processed_path = processed_path
         self.index_path = index_path
 
